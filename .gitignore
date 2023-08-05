@@ -19,3 +19,4 @@ packaging/Vagrantfile
 npm-debug.log
 .vscode
 .vagrant
+.docker
