@@ -46,6 +46,9 @@
             </div>
 
             <div id="no-more-tables">
+              <label for="userSearch">Search user</label>
+              <input type="text" class="form-control" name="userSearch" style="width:40%" placeholder="Search"
+                ng-model="userSearchString">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -59,7 +62,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="user in usersChannelsMatrix.users | orderBy:['user']">
+                  <tr ng-repeat="user in usersChannelsMatrix.users | orderBy:['user'] | filter:userSearchString">
                     <td data-title="#{{ $index +1 }}"><span id="counter">{{ $index +1 }}</span></td>
                     <td data-title="User" style="max-width: none;">
                       <a href="" ng-click="editUser(user.user)">{{ user.user.email }}</a>

@@ -4,6 +4,7 @@ import { UsersModalCtrl, ConfirmModalCtrl } from './'
 
 export function UsersCtrl ($scope, $uibModal, $window, Api, Alerting, Notify) {
   /* -------------------------Initial load & onChanged---------------------------- */
+  $scope.userSearchString = "";
   const querySuccess = function (users) {
     $scope.users = users
     if (users.length === 0) {
