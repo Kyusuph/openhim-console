@@ -19,7 +19,9 @@
         <!-- Top Alerts -->
         
         <div class="panel-body">
-
+          <label for="mediatorSearch">Search By Mediator Name</label>
+          <input type="text" class="form-control" name="mediatorSearch" style="width:40%" placeholder="Search"
+            ng-model="mediatorSearchString">
           <div id="no-more-tables">
             <!-- Table with all the transaction logs -->
 
@@ -37,7 +39,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="table-list" ng-repeat="mediator in mediators | orderBy:['name']" ng-click='viewMediatorDetails("/mediators/" + mediator.urn, $event)'>
+                <tr class="table-list" ng-repeat="mediator in mediators | orderBy:['name'] | filter:mediatorSearchString" ng-click='viewMediatorDetails("/mediators/" + mediator.urn, $event)'>
                   <td data-title="# {{ $index +1 }}" class="responsiveTransactionIndexCheckbox">
                     <span>{{ $index +1 }}</span>
                   </td>

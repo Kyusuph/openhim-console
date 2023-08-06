@@ -6,7 +6,7 @@ export function MediatorsCtrl ($scope, $uibModal, $location, Api, Alerting, Medi
   /******************************************************************/
   /**   These are the functions for the Mediators initial load     **/
   /******************************************************************/
-
+  $scope.mediatorSearchString = "";
   const querySuccess = function (mediators) {
     $scope.mediators = mediators
     if (mediators.length === 0) {
