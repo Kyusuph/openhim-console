@@ -3,6 +3,8 @@ import confirmModal from '~/views/confirmModal'
 import { ChannelsModalCtrl, ConfirmModalCtrl } from './'
 
 export function ChannelsCtrl ($scope, $uibModal, Api, Alerting) {
+  $scope.channelSearchString = '';
+
   /* -------------------------Initial load & onChanged---------------------------- */
   const querySuccess = function (channels) {
     $scope.channels = channels
