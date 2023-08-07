@@ -42,6 +42,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
   function updateChannelsBarChart (metrics) {
     // set scope variable for amount of active channels
     $scope.activeChannels = metrics.length
+    $scope.channelSearchString = "";
 
     let channelsMap
 

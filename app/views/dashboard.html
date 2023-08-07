@@ -118,14 +118,14 @@
                     <span ng-if="channel.status=='deleted'">{{ channelData.channel.name }}</span>
                     
                   </td>
-                  <td style="background-color: lightblue;"> {{channelData.completed}} </td>
+                  <td align="center" data-title="Channel completed transactions"> {{channelData.completed | number}} </td>
 
-                  <td data-title="Access">  {{channelData.completedWErrors}} </td>
+                  <td align="center" data-title="Channel completed with errors transactions">  {{channelData.completedWErrors | number}} </td>
 
-                  <td data-title="Monitoring">  {{channelData.failed}} </td>
-                  <td data-title="status">  {{channelData.processing}} </td>
-                  <td>  {{channelData.successful}} </td>
-                  <td> {{channelData.total}} </td>
+                  <td align="center" data-title="Channel failed transactions">  {{channelData.failed | number}} </td>
+                  <td align="center" data-title="Channel processing transactions">  {{channelData.processing | number}} </td>
+                  <td align="center" data-title="Channel successful transactions">  {{channelData.successful | number}} </td>
+                  <td align="center" data-title="Channel total transactions"> {{channelData.total | number}} </td>
                 </tr>
               </tbody>
             </table>
