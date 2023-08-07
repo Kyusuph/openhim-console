@@ -49,12 +49,14 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
     Api.Channels.query(function (channels) {
       channelsMap = {}
       angular.forEach(channels, function (channel) {
-        channelsMap[channel._id] = channel.name
+        channelsMap[channel._id] = channel
       })
 
       // define varables for graph data set
       let channelGraphStack
+      let channelGraphStatus
       const channelsData = []
+      const channelStatusGraphData = []
       const channelsKeys = []
       const channelsLabels = []
       const channelsColors = []
@@ -62,12 +64,16 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
       // loop through each channels found in result and construct graph objects
       for (let i = 0; i < metrics.length; i++) {
         channelGraphStack = {}
+        channelGraphStatus = {}
 
         // create a link object for when the user clicks on the bar
         channelGraphStack.link = 'channels/' + metrics[i]._id.channelID
-        channelGraphStack.channel = channelsMap[metrics[i]._id.channelID]
+        channelGraphStack.channel = channelsMap[metrics[i]._id.channelID].name
+        channelGraphStatus.link = 'channels/' + metrics[i]._id.channelID
+        channelGraphStatus.channel = channelsMap[metrics[i]._id.channelID]
 
         channelGraphStack.processing = metrics[i].processing
+        channelGraphStatus.processing = metrics[i].processing
 
         // only add these if it isnt yet present
         if (channelsKeys.indexOf('processing') === -1) {
@@ -77,6 +83,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
 
         channelGraphStack.failed = metrics[i].failed
+        channelGraphStatus.failed = metrics[i].failed
 
         // only add these if it isnt yet present
         if (channelsKeys.indexOf('failed') === -1) {
@@ -86,6 +93,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
 
         channelGraphStack.completed = metrics[i].completed
+        channelGraphStatus.completed = metrics[i].completed
 
         // only add these if it isnt yet present
         if (channelsKeys.indexOf('completed') === -1) {
@@ -95,6 +103,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
 
         channelGraphStack.completedWErrors = metrics[i].completedWErrors
+        channelGraphStatus.completedWErrors = metrics[i].completedWErrors
 
         if (channelsKeys.indexOf('completedWErrors') === -1) {
           channelsKeys.push('completedWErrors')
@@ -103,6 +112,8 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
 
         channelGraphStack.successful = metrics[i].successful
+        channelGraphStatus.successful = metrics[i].successful
+        channelGraphStatus.total = metrics[i].total
 
         if (channelsKeys.indexOf('successful') === -1) {
           channelsKeys.push('successful')
@@ -111,9 +122,11 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
 
         channelsData.push(channelGraphStack)
+        channelStatusGraphData.push(channelGraphStatus)
       }
 
       $scope.channelsData = { data: channelsData, xkey: 'channel', ykeys: channelsKeys, labels: channelsLabels, colors: channelsColors, stacked: true }
+      $scope.channelStatusGraphData = channelStatusGraphData
     },
     function (err) {
       Alerting.AlertAddMsg('status', 'danger', 'Channel Load Error: ' + err.status + ' ' + err.data)

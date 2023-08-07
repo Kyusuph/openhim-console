@@ -89,6 +89,53 @@
             </div>
           </div>
         </div>
+
+        <div class="panel-body">
+          <div id="no-more-tables">
+            <label for="channelSearch">Search channel</label>
+            <input type="text" class="form-control" name="channelSearch" style="width:40%" placeholder="Search"
+              ng-model="channelSearchString">
+            <table class="table table-striped channelListingTable">
+              <thead>
+                <tr>
+                  <th width="50">#</th>
+                  <th>Channel Name</th>
+                  <th>Completed</th>
+                  <th>Completed With Errors</th>
+                  <th>Failed</th>
+                  <th>Processing</th>
+                  <th>Successful</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="channelData in channelStatusGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
+                  <td data-title="Priority" align="left" style="font-weight: bold">
+                    {{ $index + 1 }}
+                  </td>
+                  <td data-title="Channel Name">
+                    <a uib-tooltip={{channelData.channel.description}} ng-if="channelData.channel.status!='deleted'" href="#!/{{channelData.link}}">{{channelData.channel.name}}</a>
+                    <span ng-if="channel.status=='deleted'">{{ channelData.channel.name }}</span>
+                    
+                  </td>
+                  <td style="background-color: lightblue;"> {{channelData.completed}} </td>
+
+                  <td data-title="Access">  {{channelData.completedWErrors}} </td>
+
+                  <td data-title="Monitoring">  {{channelData.failed}} </td>
+                  <td data-title="status">  {{channelData.processing}} </td>
+                  <td>  {{channelData.successful}} </td>
+                  <td> {{channelData.total}} </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- show loading gif when scope object empty and no server errors exist -->
+          <div class="loadingContainer" ng-show="!channelStatusGraphData">
+            <span id="loading-spinner" alt="Loading..."></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
