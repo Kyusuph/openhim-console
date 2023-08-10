@@ -88,52 +88,70 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="panel-body">
-          <div id="no-more-tables">
-            <label for="channelSearch">Search channel</label>
-            <input type="text" class="form-control" name="channelSearch" style="width:40%" placeholder="Search"
-              ng-model="channelSearchString">
-            <table class="table table-striped channelListingTable">
-              <thead>
-                <tr>
-                  <th width="50">#</th>
-                  <th>Channel Name</th>
-                  <th>Completed</th>
-                  <th>Completed With Errors</th>
-                  <th>Failed</th>
-                  <th>Processing</th>
-                  <th>Successful</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="channelData in channelStatusGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
-                  <td data-title="Priority" align="left" style="font-weight: bold">
-                    {{ $index + 1 }}
-                  </td>
-                  <td data-title="Channel Name">
-                    <a uib-tooltip={{channelData.channel.description}} ng-if="channelData.channel.status!='deleted'" href="#!/{{channelData.link}}">{{channelData.channel.name}}</a>
-                    <span ng-if="channel.status=='deleted'">{{ channelData.channel.name }}</span>
-                    
-                  </td>
-                  <td align="center" data-title="Channel completed transactions"> {{channelData.completed | number}} </td>
+          <div class="content-box-large bordered-box">
+            <div class="panel-heading">
+              <div class="panel-title">Transaction Count by Channel and Statuses</div>
+            </div>
 
-                  <td align="center" data-title="Channel completed with errors transactions">  {{channelData.completedWErrors | number}} </td>
+            <!-- Transaction Load Alerts -->
+            <div uib-alert ng-repeat="alert in alerts.dashboardChannelList" ng-class="'alert-' + (alert.type || 'warning')">{{alert.msg}}</div>
+            <!-- Transaction Load Alerts -->
 
-                  <td align="center" data-title="Channel failed transactions">  {{channelData.failed | number}} </td>
-                  <td align="center" data-title="Channel processing transactions">  {{channelData.processing | number}} </td>
-                  <td align="center" data-title="Channel successful transactions">  {{channelData.successful | number}} </td>
-                  <td align="center" data-title="Channel total transactions"> {{channelData.total | number}} </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="panel-body">
+            <div class="row" ng-if="!alerts.dashboardChannelList">
+            <div id="no-more-tables" class="col-md-9">
+              <input type="text" class="form-control" name="channelSearch" style="width:40%" placeholder="Search Channel"
+                ng-model="channelSearchString">
+              <table class="table table-striped channelListingTable">
+                <thead>
+                  <tr>
+                    <th width="50">#</th>
+                    <th>Channel Name</th>
+                    <th>Completed</th>
+                    <th>Completed With Errors</th>
+                    <th>Failed</th>
+                    <th>Processing</th>
+                    <th>Successful</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="channelData in channelStatusGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
+                    <td data-title="Priority" align="left" style="font-weight: bold">
+                      {{ $index + 1 }}
+                    </td>
+                    <td data-title="Channel Name">
+                      <a uib-tooltip={{channelData.channel.description}} ng-if="channelData.channel.status!='deleted'" href="#!/{{channelData.link}}">{{channelData.channel.name}}</a>
+                      <span ng-if="channel.status=='deleted'">{{ channelData.channel.name }}</span>
+                      
+                    </td>
+                    <td align="center" data-title="Channel completed transactions"> {{channelData.completed | number}} </td>
+  
+                    <td align="center" data-title="Channel completed with errors transactions">  {{channelData.completedWErrors | number}} </td>
+  
+                    <td align="center" data-title="Channel failed transactions">  {{channelData.failed | number}} </td>
+                    <td align="center" data-title="Channel processing transactions">  {{channelData.processing | number}} </td>
+                    <td align="center" data-title="Channel successful transactions">  {{channelData.successful | number}} </td>
+                    <td align="center" data-title="Channel total transactions"> {{channelData.total | number}} </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+              <div class="col-md-3">
+                <div morris-donut-chart
+                  id="status-donut"
+                  data="channelsDonutDashboardChartData"
+                  style="height: 250px;">
+                </div>
+              </div>
+            </div>
+  
+            <!-- show loading gif when scope object empty and no dashboard channels list alert exist -->
+            <div class="loadingContainer" ng-show="!(channelStatusGraphData || alerts.dashboardChannelList)">
+              <span id="loading-spinner" alt="Loading..."></span>
+            </div>
           </div>
-
-          <!-- show loading gif when scope object empty and no server errors exist -->
-          <div class="loadingContainer" ng-show="!channelStatusGraphData">
-            <span id="loading-spinner" alt="Loading..."></span>
           </div>
         </div>
       </div>

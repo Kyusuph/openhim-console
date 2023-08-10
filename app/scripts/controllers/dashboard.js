@@ -67,6 +67,8 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         channelGraphStack = {}
         channelGraphStatus = {}
 
+        // {"data":[{"label":"Failed","value":"100.00"}],"colors":["#d9534f"]}
+
         // create a link object for when the user clicks on the bar
         channelGraphStack.link = 'channels/' + metrics[i]._id.channelID
         channelGraphStack.channel = channelsMap[metrics[i]._id.channelID].name
@@ -126,6 +128,35 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         channelStatusGraphData.push(channelGraphStatus)
       }
 
+      const totalStatusValues = {}
+      let totalTransactions = 0
+      const channelsDonutData = []
+      const channelsDonutColors = []
+
+      // initialize all status with 0 value
+      for(let j = 0; j < channelsKeys.length; j++) {
+        totalStatusValues[channelsKeys[j]] = 0
+      }
+
+      // aggregate all channels transaction by status
+      for (let i = 0; i < channelsData.length; i++) {
+        const singleChannelData = channelsData[i]
+        for(let j = 0; j < channelsKeys.length; j++) {
+          totalStatusValues[channelsKeys[j]] += singleChannelData[channelsKeys[j]]
+          totalTransactions += singleChannelData[channelsKeys[j]]
+        }
+      }
+      
+      // calculate percent from the aggregation by ignoring status with 0 valued
+      for(let j = 0; j < channelsKeys.length; j++) {
+        if(totalStatusValues[channelsKeys[j]] !== 0) {
+          const percent = (100 / totalTransactions * totalStatusValues[channelsKeys[j]]).toFixed(2)
+          channelsDonutData.push({label:channelsLabels[j],value:percent})
+          channelsDonutColors.push(channelsColors[j])
+        }
+      }
+      $scope.channelsDonutDashboardChartData = {data: channelsDonutData, colors: channelsDonutColors}
+      console.log($scope.channelsDonutDashboardChartData)
       $scope.channelsData = { data: channelsData, xkey: 'channel', ykeys: channelsKeys, labels: channelsLabels, colors: channelsColors, stacked: true }
       $scope.channelStatusGraphData = channelStatusGraphData
     },
@@ -137,6 +168,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
   function channelMetricsSuccess (metrics) {
     if (metrics.length === 0) {
       Alerting.AlertAddMsg('status', 'warning', noDataErrorMsg)
+      Alerting.AlertAddMsg('dashboardChannelList', 'warning', noDataErrorMsg)
     } else {
       updateChannelsBarChart(metrics)
     }
@@ -159,6 +191,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
     Alerting.AlertReset('load')
     Alerting.AlertReset('responseTime')
     Alerting.AlertReset('status')
+    Alerting.AlertReset('dashboardChannelList')
 
     Metrics.refreshDatesForSelectedPeriod($scope.selectedDateType)
     updateTimeseriesMetrics()
