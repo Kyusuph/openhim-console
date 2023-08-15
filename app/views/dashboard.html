@@ -101,8 +101,23 @@
           <div class="panel-body">
             <div class="row" ng-if="!alerts.dashboardChannelList">
             <div id="no-more-tables" class="col-md-9">
-              <input type="text" class="form-control" name="channelSearch" style="width:40%" placeholder="Search Channel"
-                ng-model="channelSearchString">
+                <div class="col-md-9">
+                  <input type="text" class="form-control" name="channelSearch" style="width:40%" placeholder="Search Channel"
+                  ng-model="channelSearchString">
+                </div>
+                <div class="col-md-3">
+                  <div class="settings_div" style="float: left; margin-right: 15px;">
+                    <select class="form-control" ng-model="selectedDashboardStatus"
+                      ng-class="{formControlNotEmpty: selectedDashboardStatus}" ng-change="applyStatusFilterOnTable(selectedDashboardStatus)">
+                      <option value="">Don't filter</option>
+                      <option value="failed">Show Failed</option>
+                      <option value="processing">Show Processing</option>
+                      <option value="completed">Show Completed</option>
+                      <option value="completedWErrors">Show Completed with error(s)</option>
+                      <option value="successful">Show Successful</option>
+                    </select>
+                  </div>
+                </div>
               <table class="table table-striped channelListingTable">
                 <thead>
                   <tr>
@@ -117,7 +132,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr ng-repeat="channelData in channelStatusGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
+                  <div ng-show="channelStatusFilteredGraphData.length > 0">
+                  <tr ng-repeat="channelData in channelStatusFilteredGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
                     <td data-title="Priority" align="left" style="font-weight: bold">
                       {{ $index + 1 }}
                     </td>
@@ -135,6 +151,18 @@
                     <td align="center" data-title="Channel successful transactions">  {{channelData.successful | number}} </td>
                     <td align="center" data-title="Channel total transactions"> {{channelData.total | number}} </td>
                   </tr>
+                </div>
+                <div ng-show="channelStatusFilteredGraphData.length === 0">
+                  <tr>
+                    <td colspan="8">
+                  <div uib-alert  ng-class="'alert-' + (alert.type || 'warning')">
+                    <center>
+                      <span> There is no channel transactions based on the filter</span>
+                    </center>
+                  </div>
+                  </td>
+                  </tr>
+                </div>
                 </tbody>
               </table>
             </div>

@@ -2,6 +2,7 @@ import moment from 'moment'
 
 export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Alerting, Metrics) {
   const noDataErrorMsg = 'There has been no transactions received for the queried timeframe'
+  var selectedDashboardStatus = ""
 
   $scope.selectedDateType = {
     period: '1d'
@@ -42,7 +43,8 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
   function updateChannelsBarChart (metrics) {
     // set scope variable for amount of active channels
     $scope.activeChannels = metrics.length
-    $scope.channelSearchString = "";
+    $scope.channelSearchString = ""
+    $scope.selectedDashboardStatus = ""
 
     let channelsMap
 
@@ -156,9 +158,9 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
         }
       }
       $scope.channelsDonutDashboardChartData = {data: channelsDonutData, colors: channelsDonutColors}
-      console.log($scope.channelsDonutDashboardChartData)
       $scope.channelsData = { data: channelsData, xkey: 'channel', ykeys: channelsKeys, labels: channelsLabels, colors: channelsColors, stacked: true }
       $scope.channelStatusGraphData = channelStatusGraphData
+      $scope.applyStatusFilterOnTable(selectedDashboardStatus)
     },
     function (err) {
       Alerting.AlertAddMsg('status', 'danger', 'Channel Load Error: ' + err.status + ' ' + err.data)
@@ -196,6 +198,16 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
     Metrics.refreshDatesForSelectedPeriod($scope.selectedDateType)
     updateTimeseriesMetrics()
     updateChannelMetrics()
+  }
+
+  $scope.applyStatusFilterOnTable = function (status) {
+      $scope.selectedDashboardStatus = status
+      selectedDashboardStatus = status
+    if(status) {
+      $scope.channelStatusFilteredGraphData = $scope.channelStatusGraphData.filter(channelStatus => channelStatus[status] > 0)
+    } else {
+      $scope.channelStatusFilteredGraphData = $scope.channelStatusGraphData
+    }
   }
 
   $scope.updateMetrics()
