@@ -9,3 +9,4 @@ Dockerfile
 .editorconfig
 .gitignore
 .gitattributes
+.docker
