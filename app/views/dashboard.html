@@ -132,7 +132,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <div ng-show="channelStatusFilteredGraphData.length > 0">
                   <tr ng-repeat="channelData in channelStatusFilteredGraphData | orderBy:['-completed','channel'] | filter:channelSearchString">
                     <td data-title="Priority" align="left" style="font-weight: bold">
                       {{ $index + 1 }}
@@ -151,18 +150,6 @@
                     <td align="center" data-title="Channel successful transactions">  {{channelData.successful | number}} </td>
                     <td align="center" data-title="Channel total transactions"> {{channelData.total | number}} </td>
                   </tr>
-                </div>
-                <div ng-show="channelStatusFilteredGraphData.length === 0">
-                  <tr>
-                    <td colspan="8">
-                  <div uib-alert  ng-class="'alert-' + (alert.type || 'warning')">
-                    <center>
-                      <span> There is no channel transactions based on the filter</span>
-                    </center>
-                  </div>
-                  </td>
-                  </tr>
-                </div>
                 </tbody>
               </table>
             </div>
