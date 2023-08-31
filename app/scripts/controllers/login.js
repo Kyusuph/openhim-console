@@ -6,6 +6,7 @@ export function LoginCtrl ($scope, login, $window, $location, $timeout, $rootSco
   $scope.passwordFocus = false
   $scope.rootPasswordReset = false
   $scope.resetSuccess = false
+  $scope.viewPassword = false
 
   // if url "#/logout" is returned then destroy the session
   if (/\/logout$/i.test($window.location.hash)) {
@@ -216,4 +217,13 @@ export function LoginCtrl ($scope, login, $window, $location, $timeout, $rootSco
       redirectUri: $window.location.origin
     })
   }
+
+  $scope.passwordToggle = function () {
+    $scope.viewPassword = !$scope.viewPassword;
+    if($scope.viewPassword) {
+      $scope.passwordInputType = 'text'
+    }else {
+      $scope.passwordInputType = 'password'
+    }
+  };
 }

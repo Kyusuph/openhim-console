@@ -19,7 +19,7 @@
     <![endif]-->
 
   <div id="container">
-    <div id="header">
+    <div id="header"  ng-if="!hideHeader">
 
       <!-- Header -->
       <div class="header">
@@ -90,21 +90,20 @@
 
     <!-- Add your site or application content here -->
     <div id="body" ng-view=""></div>
-
-    <footer>
+    <!-- <footer>
       <div class="container">
         <div class="copy text-center">
-          {{appFooterTitle}}<br /> Copyright&nbsp;&copy;&nbsp;
-          <script>
-            document.write(new Date().getFullYear());
-          </script>&nbsp;<a href='http://jembi.org'>Jembi Health Systems NPC</a><br />
+          {{appFooterTitle}}<br />
+          Copyright&nbsp;&copy;&nbsp;
+          <script>document.write(new Date().getFullYear());</script>&nbsp;<a href='https://www.moh.go.tz/'>Ministry Of
+            Health Tanzania</a><br />
           <div>
-            <span ng-bind-html="appFooterPoweredBy"></span>
-            <a href="#/about" footer-version></a>
-          </div>
+              <span ng-bind-html="appFooterPoweredBy"></span>
+              <a href="#/about" footer-version></a>
+            </div>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
   <script>
