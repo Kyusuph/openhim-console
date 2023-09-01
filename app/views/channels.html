@@ -74,6 +74,7 @@
             <table class="table table-striped channelListingTable">
               <thead>
                 <tr>
+                  <th>#</th>
                   <th width="90">
                     Priority
                     <i
@@ -94,6 +95,9 @@
                 <tr
                   ng-repeat="channel in filteredChannels | orderBy:['-status', 'priority','name'] | filter: channelSearchString"
                 >
+                <td data-title="Channel index">
+                  {{ channelStartIndex + $index + 1 }}
+                </td>
                   <td
                     data-title="Priority"
                     align="left"
@@ -230,6 +234,23 @@
                 </tr>
               </tbody>
             </table>
+            <div class="tablenav">
+              <span class="displaying-num">
+                  Records per page
+                  <select name="recordsPerPage" ng-model="pageSize" ng-options="page.value for page in pageSizeOptions" ng-change="pageSizeChanged()">
+                  </select>
+              </span>
+              <div class="tablenav-pages">
+                  <span class="pagination-links">
+                      <span>{{engagementItems.length}} items </span>
+                      <a class="first-page" ng-click="pageNoChanged(-2)"><span>«</span></a>
+                      <a class="prev-page" ng-click="pageNoChanged(-1)"><span>‹</span></a>
+                      <span>{{currentPage}} of {{lastPage}}</span>
+                      <a class="next-page" ng-click="pageNoChanged(1)"><span>›</span></a>
+                      <a class="last-page" ng-click="pageNoChanged(2)"><span>»</span></a>
+                  </span>
+              </div>
+          </div>
           </div>
 
           <!-- show loading gif when scope object empty and no server errors exist -->
