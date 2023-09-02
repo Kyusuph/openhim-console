@@ -279,81 +279,81 @@ export function ChannelsCtrl($scope, $uibModal, Api, Alerting) {
   };
 
   // Channels table list configuration
-  $scope.originalItems = [];
+  $scope.originalFilteredChannels = [];
   $scope.channelStartIndex = 0;
 
-  $scope.pageSizeOptions = [
+  $scope.channelPageSizeOptions = [
       { count: '10', value: '10' },
       { count: '20', value: '20'},
       { count: '50', value: '50' } 
   ];
 
-  $scope.pageSize = $scope.pageSizeOptions[0]; // default page size as per AC
+  $scope.channelPageSize = $scope.channelPageSizeOptions[0]; // default page size as per AC
 
   $scope.$watch('filteredChannels', function (newValue, oldValue) {
       if (newValue !== oldValue) {
 
-          if ($scope.filteredChannels.length > 0 && $scope.originalItems.length === 0) {
-              $scope.originalItems = $scope.filteredChannels;
+          if ($scope.filteredChannels.length > 0 && $scope.originalFilteredChannels.length === 0) {
+              $scope.originalFilteredChannels = $scope.filteredChannels;
 
-              $scope.currentPage = 1; // default page is first page
-              $scope.lastPage = parseInt(Math.ceil($scope.originalItems.length / $scope.pageSize.value)); // calculates the last page
+              $scope.channelCurrentPage = 1; // default page is first page
+              $scope.channelLastPage = parseInt(Math.ceil($scope.originalFilteredChannels.length / $scope.channelPageSize.value)); // calculates the last page
 
-              $scope.filteredChannels = $scope.originalItems.slice(0, $scope.pageSize.value);
+              $scope.filteredChannels = $scope.originalFilteredChannels.slice(0, $scope.channelPageSize.value);
           }
-          else if ($scope.filteredChannels.length > 0 && $scope.originalItems.length > 0 && $scope.filteredChannels.length === $scope.originalItems.length) {
-              $scope.originalItems = [];
-              $scope.originalItems = $scope.filteredChannels;
+          else if ($scope.filteredChannels.length > 0 && $scope.originalFilteredChannels.length > 0 && $scope.filteredChannels.length === $scope.originalFilteredChannels.length) {
+              $scope.originalFilteredChannels = [];
+              $scope.originalFilteredChannels = $scope.filteredChannels;
 
-              $scope.lastPage = parseInt(Math.ceil($scope.originalItems.length / $scope.pageSize.value)); // calculates the last page
+              $scope.channelLastPage = parseInt(Math.ceil($scope.originalFilteredChannels.length / $scope.channelPageSize.value)); // calculates the last page
 
-              var begin = (($scope.currentPage - 1) * $scope.pageSize.value);
+              var begin = (($scope.channelCurrentPage - 1) * $scope.channelPageSize.value);
               $scope.channelStartIndex = begin;
-              var end = begin + parseInt($scope.pageSize.value);
+              var end = begin + parseInt($scope.channelPageSize.value);
 
-              if (parseInt(end) > $scope.originalItems.length) {
+              if (parseInt(end) > $scope.originalFilteredChannels.length) {
                   // set the last item index to length of array
-                  end = $scope.originalItems.length;
+                  end = $scope.originalFilteredChannels.length;
               }
 
-              $scope.filteredChannels = $scope.originalItems.slice(begin, end);
+              $scope.filteredChannels = $scope.originalFilteredChannels.slice(begin, end);
           } else {
-            var begin = (($scope.currentPage - 1) * $scope.pageSize.value);
-            var end = begin + parseInt($scope.pageSize.value);
+            var begin = (($scope.channelCurrentPage - 1) * $scope.channelPageSize.value);
+            var end = begin + parseInt($scope.channelPageSize.value);
             $scope.channelStartIndex = begin;
           }
       }
   }, true);
 
   // Change page size
-  $scope.pageSizeChanged = function () {
+  $scope.channelPageSizeChanged = function () {
     var begin = 0; // if you change page size anytime it always starts from begining
-    var end =  parseInt($scope.pageSize.value);
+    var end =  parseInt($scope.channelPageSize.value);
   
-    $scope.currentPage = 1; // reset current page from the start
-    $scope.lastPage = parseInt(Math.ceil($scope.originalItems.length / $scope.pageSize.value)); // re-calculates the last page
-    $scope.filteredChannels = $scope.originalItems.slice(begin, end);
+    $scope.channelCurrentPage = 1; // reset current page from the start
+    $scope.channelLastPage = parseInt(Math.ceil($scope.originalFilteredChannels.length / $scope.channelPageSize.value)); // re-calculates the last page
+    $scope.filteredChannels = $scope.originalFilteredChannels.slice(begin, end);
   };
 
   // Change of page number
-  $scope.pageNoChanged = function (value) {
+  $scope.channelPageNoChanged = function (value) {
     // evaluates what is your current situation and can page no be changed?
-    if ($scope.currentPage === 1 && value < -1) {
+    if ($scope.channelCurrentPage === 1 && value < -1) {
         //console.log("you can't request page change");
         // if you are on FIRST page and requested FIRST page
         return;
     }
-    else if ($scope.currentPage === $scope.lastPage && value > 1) {
+    else if ($scope.channelCurrentPage === $scope.channelLastPage && value > 1) {
         //console.log("you can't request page change");
         // if you are on LAST page and requested LAST page
         return;
     }
-    else if ($scope.currentPage === 1 && value === -1) {
+    else if ($scope.channelCurrentPage === 1 && value === -1) {
         //console.log("you can't request page change");
         // if you are on FIRST page and requested previous page
         return;
     }
-    else if ($scope.currentPage === $scope.lastPage && value === 1) {
+    else if ($scope.channelCurrentPage === $scope.channelLastPage && value === 1) {
         //console.log("you can't request page change");
         // if you are on LAST page and requested next page
         return;
@@ -362,25 +362,25 @@ export function ChannelsCtrl($scope, $uibModal, Api, Alerting) {
     // evaluates what change in page no is requested?
     if (value > 1) {
         // if last page is requested
-        $scope.currentPage = $scope.lastPage;
+        $scope.channelCurrentPage = $scope.channelLastPage;
     }
     else if (value < -1) {
         // if first page is requested
-        $scope.currentPage = parseInt(1);
+        $scope.channelCurrentPage = parseInt(1);
     }
     else {
         // next or previous page are requested
-        $scope.currentPage = parseInt($scope.currentPage) + parseInt(value);
+        $scope.channelCurrentPage = parseInt($scope.channelCurrentPage) + parseInt(value);
     }
 
-    var begin = (($scope.currentPage - 1) * $scope.pageSize.value);
-    var end = begin + parseInt($scope.pageSize.value);
+    var begin = (($scope.channelCurrentPage - 1) * $scope.channelPageSize.value);
+    var end = begin + parseInt($scope.channelPageSize.value);
 
-    if (parseInt(end) > $scope.originalItems.length) {
+    if (parseInt(end) > $scope.originalFilteredChannels.length) {
         // set the last item index to length of array
-        end = $scope.originalItems.length;
+        end = $scope.originalFilteredChannels.length;
     }
 
-    $scope.filteredChannels = $scope.originalItems.slice(begin, end);
+    $scope.filteredChannels = $scope.originalFilteredChannels.slice(begin, end);
 };
 }
