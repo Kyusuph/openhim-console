@@ -296,7 +296,7 @@ export function ChannelsCtrl($scope, $uibModal, Api, Alerting) {
           if ($scope.filteredChannels.length > 0 && $scope.originalItems.length === 0) {
               $scope.originalItems = $scope.filteredChannels;
 
-              $scope.currentPage = 0; // default page is first page
+              $scope.currentPage = 1; // default page is first page
               $scope.lastPage = parseInt(Math.ceil($scope.originalItems.length / $scope.pageSize.value)); // calculates the last page
 
               $scope.filteredChannels = $scope.originalItems.slice(0, $scope.pageSize.value);
@@ -317,6 +317,10 @@ export function ChannelsCtrl($scope, $uibModal, Api, Alerting) {
               }
 
               $scope.filteredChannels = $scope.originalItems.slice(begin, end);
+          } else {
+            var begin = (($scope.currentPage - 1) * $scope.pageSize.value);
+            var end = begin + parseInt($scope.pageSize.value);
+            $scope.channelStartIndex = begin;
           }
       }
   }, true);
