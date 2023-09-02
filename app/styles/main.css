@@ -1564,3 +1564,16 @@ label { position: relative; }
   background-color: transparent;
   outline: none;
 }
+
+.tablenav {
+  display: flex;
+  justify-content: space-between; /* This will push the inner elements to the left and right */
+  align-items: center; /* This will vertically align the content in the center */
+}
+
+[ng-click] {
+  background-color: #ddd;
+  cursor: pointer; /* To change the cursor to a pointer on hover */
+}
+
+
