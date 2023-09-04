@@ -219,4 +219,111 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
       dashboardInterval = undefined
     }
   })
+
+
+  // Channels and Role table list configuration
+  $scope.originalFilteredDashboardChannels = [];
+  $scope.dashboardChannelStartIndex = 0;
+
+  $scope.dashboardChannelPageSizeOptions = [
+      { count: '10', value: '10' },
+      { count: '20', value: '20'},
+      { count: '50', value: '50' } 
+  ];
+
+  $scope.dashboardChannelPageSize = $scope.dashboardChannelPageSizeOptions[0]; // default page size as per AC
+
+  $scope.$watch('dashboardChannels', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+
+          if ($scope.channelStatusFilteredGraphData.length > 0 && $scope.originalFilteredDashboardChannels.length === 0) {
+              $scope.originalFilteredDashboardChannels = $scope.channelStatusFilteredGraphData;
+
+              $scope.dashboardChannelCurrentPage = 1; // default page is first page
+              $scope.dashboardChannelLastPage = parseInt(Math.ceil($scope.originalFilteredDashboardChannels.length / $scope.dashboardChannelPageSize.value)); // calculates the last page
+
+              $scope.channelStatusFilteredGraphData = $scope.originalFilteredDashboardChannels.slice(0, $scope.dashboardChannelPageSize.value);
+          }
+          else if ($scope.channelStatusFilteredGraphData.length > 0 && $scope.originalFilteredDashboardChannels.length > 0 && $scope.channelStatusFilteredGraphData.length === $scope.originalFilteredDashboardChannels.length) {
+              $scope.originalFilteredDashboardChannels = [];
+              $scope.originalFilteredDashboardChannels = $scope.channelStatusFilteredGraphData;
+
+              $scope.dashboardChannelLastPage = parseInt(Math.ceil($scope.originalFilteredDashboardChannels.length / $scope.dashboardChannelPageSize.value)); // calculates the last page
+
+              var begin = (($scope.dashboardChannelCurrentPage - 1) * $scope.dashboardChannelPageSize.value);
+              $scope.dashboardChannelStartIndex = begin;
+              var end = begin + parseInt($scope.dashboardChannelPageSize.value);
+
+              if (parseInt(end) > $scope.originalFilteredDashboardChannels.length) {
+                  // set the last item index to length of array
+                  end = $scope.originalFilteredDashboardChannels.length;
+              }
+
+              $scope.channelStatusFilteredGraphData = $scope.originalFilteredDashboardChannels.slice(begin, end);
+          } else {
+            var begin = (($scope.dashboardChannelCurrentPage - 1) * $scope.dashboardChannelPageSize.value);
+            var end = begin + parseInt($scope.dashboardChannelPageSize.value);
+            $scope.dashboardChannelStartIndex = begin;
+          }
+      }
+  }, true);
+
+  // Change page size
+  $scope.dashboardChannelPageSizeChanged = function () {
+    var begin = 0; // if you change page size anytime it always starts from begining
+    var end =  parseInt($scope.dashboardChannelPageSize.value);
+  
+    $scope.dashboardChannelCurrentPage = 1; // reset current page from the start
+    $scope.dashboardChannelLastPage = parseInt(Math.ceil($scope.originalFilteredDashboardChannels.length / $scope.dashboardChannelPageSize.value)); // re-calculates the last page
+    $scope.channelStatusFilteredGraphData = $scope.originalFilteredDashboardChannels.slice(begin, end);
+  };
+
+  // Change of page number
+  $scope.dashboardChannelPageNoChanged = function (value) {
+    // evaluates what is your current situation and can page no be changed?
+    if ($scope.dashboardChannelCurrentPage === 1 && value < -1) {
+        //console.log("you can't request page change");
+        // if you are on FIRST page and requested FIRST page
+        return;
+    }
+    else if ($scope.dashboardChannelCurrentPage === $scope.dashboardChannelLastPage && value > 1) {
+        //console.log("you can't request page change");
+        // if you are on LAST page and requested LAST page
+        return;
+    }
+    else if ($scope.dashboardChannelCurrentPage === 1 && value === -1) {
+        //console.log("you can't request page change");
+        // if you are on FIRST page and requested previous page
+        return;
+    }
+    else if ($scope.dashboardChannelCurrentPage === $scope.dashboardChannelLastPage && value === 1) {
+        //console.log("you can't request page change");
+        // if you are on LAST page and requested next page
+        return;
+    }
+
+    // evaluates what change in page no is requested?
+    if (value > 1) {
+        // if last page is requested
+        $scope.dashboardChannelCurrentPage = $scope.dashboardChannelLastPage;
+    }
+    else if (value < -1) {
+        // if first page is requested
+        $scope.dashboardChannelCurrentPage = parseInt(1);
+    }
+    else {
+        // next or previous page are requested
+        $scope.dashboardChannelCurrentPage = parseInt($scope.dashboardChannelCurrentPage) + parseInt(value);
+    }
+
+    var begin = (($scope.dashboardChannelCurrentPage - 1) * $scope.dashboardChannelPageSize.value);
+    var end = begin + parseInt($scope.dashboardChannelPageSize.value);
+
+    if (parseInt(end) > $scope.originalFilteredDashboardChannels.length) {
+        // set the last item index to length of array
+        end = $scope.originalFilteredDashboardChannels.length;
+    }
+
+    $scope.channelStatusFilteredGraphData = $scope.originalFilteredDashboardChannels.slice(begin, end);
+};
 }

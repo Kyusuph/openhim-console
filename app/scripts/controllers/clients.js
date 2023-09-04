@@ -477,4 +477,216 @@ export function ClientsCtrl(
     });
   };
   /* ------------------------End Delete Confirm---------------------------- */
+
+  // Clients and Role table list configuration
+  $scope.originalFilteredClients = [];
+  $scope.originalFilteredRoles = [];
+  $scope.clientStartIndex = 0;
+  $scope.roleStartIndex = 0;
+
+  $scope.clientPageSizeOptions = [
+      { count: '10', value: '10' },
+      { count: '20', value: '20'},
+      { count: '50', value: '50' } 
+  ];
+
+  $scope.rolePageSizeOptions = [
+      { count: '10', value: '10' },
+      { count: '20', value: '20'},
+      { count: '50', value: '50' } 
+  ];
+
+  $scope.clientPageSize = $scope.clientPageSizeOptions[0]; // default page size as per AC
+  $scope.rolePageSize = $scope.rolePageSizeOptions[0]; // default page size as per AC
+
+
+  // Clients specific logic
+  $scope.$watch('clients', function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+
+          if ($scope.clients.length > 0 && $scope.originalFilteredClients.length === 0) {
+              $scope.originalFilteredClients = $scope.clients;
+
+              $scope.clientCurrentPage = 1; // default page is first page
+              $scope.clientLastPage = parseInt(Math.ceil($scope.originalFilteredClients.length / $scope.clientPageSize.value)); // calculates the last page
+
+              $scope.clients = $scope.originalFilteredClients.slice(0, $scope.clientPageSize.value);
+          }
+          else if ($scope.clients.length > 0 && $scope.originalFilteredClients.length > 0 && $scope.clients.length === $scope.originalFilteredClients.length) {
+              $scope.originalFilteredClients = [];
+              $scope.originalFilteredClients = $scope.clients;
+
+              $scope.clientLastPage = parseInt(Math.ceil($scope.originalFilteredClients.length / $scope.clientPageSize.value)); // calculates the last page
+
+              var begin = (($scope.clientCurrentPage - 1) * $scope.clientPageSize.value);
+              $scope.clientStartIndex = begin;
+              var end = begin + parseInt($scope.clientPageSize.value);
+
+              if (parseInt(end) > $scope.originalFilteredClients.length) {
+                  // set the last item index to length of array
+                  end = $scope.originalFilteredClients.length;
+              }
+
+              $scope.clients = $scope.originalFilteredClients.slice(begin, end);
+          } else {
+            var begin = (($scope.clientCurrentPage - 1) * $scope.clientPageSize.value);
+            var end = begin + parseInt($scope.clientPageSize.value);
+            $scope.clientStartIndex = begin;
+          }
+      }
+  }, true);
+
+  // Change page size
+  $scope.clientPageSizeChanged = function () {
+    var begin = 0; // if you change page size anytime it always starts from begining
+    var end =  parseInt($scope.clientPageSize.value);
+  
+    $scope.clientCurrentPage = 1; // reset current page from the start
+    $scope.clientLastPage = parseInt(Math.ceil($scope.originalFilteredClients.length / $scope.clientPageSize.value)); // re-calculates the last page
+    $scope.clients = $scope.originalFilteredClients.slice(begin, end);
+  };
+
+  // Change of page number
+  $scope.clientPageNoChanged = function (value) {
+    // evaluates what is your current situation and can page no be changed?
+    if ($scope.clientCurrentPage === 1 && value < -1) {
+        //console.log("you can't request page change");
+        // if you are on FIRST page and requested FIRST page
+        return;
+    }
+    else if ($scope.clientCurrentPage === $scope.clientLastPage && value > 1) {
+        //console.log("you can't request page change");
+        // if you are on LAST page and requested LAST page
+        return;
+    }
+    else if ($scope.clientCurrentPage === 1 && value === -1) {
+        //console.log("you can't request page change");
+        // if you are on FIRST page and requested previous page
+        return;
+    }
+    else if ($scope.clientCurrentPage === $scope.clientLastPage && value === 1) {
+        //console.log("you can't request page change");
+        // if you are on LAST page and requested next page
+        return;
+    }
+
+    // evaluates what change in page no is requested?
+    if (value > 1) {
+        // if last page is requested
+        $scope.clientCurrentPage = $scope.clientLastPage;
+    }
+    else if (value < -1) {
+        // if first page is requested
+        $scope.clientCurrentPage = parseInt(1);
+    }
+    else {
+        // next or previous page are requested
+        $scope.clientCurrentPage = parseInt($scope.clientCurrentPage) + parseInt(value);
+    }
+
+    var begin = (($scope.clientCurrentPage - 1) * $scope.clientPageSize.value);
+    var end = begin + parseInt($scope.clientPageSize.value);
+
+    if (parseInt(end) > $scope.originalFilteredClients.length) {
+        // set the last item index to length of array
+        end = $scope.originalFilteredClients.length;
+    }
+
+    $scope.clients = $scope.originalFilteredClients.slice(begin, end);
+};
+
+// Roles specific logic
+$scope.$watch('roles', function (newValue, oldValue) {
+  if (newValue !== oldValue) {
+
+      if ($scope.roles.length > 0 && $scope.originalFilteredRoles.length === 0) {
+          $scope.originalFilteredRoles = $scope.roles;
+
+          $scope.roleCurrentPage = 1; // default page is first page
+          $scope.roleLastPage = parseInt(Math.ceil($scope.originalFilteredRoles.length / $scope.rolePageSize.value)); // calculates the last page
+
+          $scope.roles = $scope.originalFilteredRoles.slice(0, $scope.rolePageSize.value);
+      }
+      else if ($scope.roles.length > 0 && $scope.originalFilteredRoles.length > 0 && $scope.roles.length === $scope.originalFilteredRoles.length) {
+          $scope.originalFilteredRoles = [];
+          $scope.originalFilteredRoles = $scope.roles;
+
+          $scope.roleLastPage = parseInt(Math.ceil($scope.originalFilteredRoles.length / $scope.rolePageSize.value)); // calculates the last page
+
+          var begin = (($scope.roleCurrentPage - 1) * $scope.rolePageSize.value);
+          $scope.roleStartIndex = begin;
+          var end = begin + parseInt($scope.rolePageSize.value);
+
+          if (parseInt(end) > $scope.originalFilteredRoles.length) {
+              // set the last item index to length of array
+              end = $scope.originalFilteredRoles.length;
+          }
+
+          $scope.roles = $scope.originalFilteredRoles.slice(begin, end);
+      } else {
+        var begin = (($scope.roleCurrentPage - 1) * $scope.rolePageSize.value);
+        var end = begin + parseInt($scope.rolePageSize.value);
+        $scope.roleStartIndex = begin;
+      }
+  }
+}, true);
+
+// Change page size
+$scope.rolePageSizeChanged = function () {
+var begin = 0; // if you change page size anytime it always starts from begining
+var end =  parseInt($scope.rolePageSize.value);
+
+$scope.roleCurrentPage = 1; // reset current page from the start
+$scope.roleLastPage = parseInt(Math.ceil($scope.originalFilteredRoles.length / $scope.rolePageSize.value)); // re-calculates the last page
+$scope.roles = $scope.originalFilteredRoles.slice(begin, end);
+};
+
+// Change of page number
+$scope.rolePageNoChanged = function (value) {
+// evaluates what is your current situation and can page no be changed?
+if ($scope.roleCurrentPage === 1 && value < -1) {
+    //console.log("you can't request page change");
+    // if you are on FIRST page and requested FIRST page
+    return;
+}
+else if ($scope.roleCurrentPage === $scope.roleLastPage && value > 1) {
+    //console.log("you can't request page change");
+    // if you are on LAST page and requested LAST page
+    return;
+}
+else if ($scope.roleCurrentPage === 1 && value === -1) {
+    //console.log("you can't request page change");
+    // if you are on FIRST page and requested previous page
+    return;
+}
+else if ($scope.roleCurrentPage === $scope.roleLastPage && value === 1) {
+    //console.log("you can't request page change");
+    // if you are on LAST page and requested next page
+    return;
+}
+
+// evaluates what change in page no is requested?
+if (value > 1) {
+    // if last page is requested
+    $scope.roleCurrentPage = $scope.roleLastPage;
+}
+else if (value < -1) {
+    // if first page is requested
+    $scope.roleCurrentPage = parseInt(1);
+}
+else {
+    // next or previous page are requested
+    $scope.roleCurrentPage = parseInt($scope.roleCurrentPage) + parseInt(value);
+}
+
+var begin = (($scope.roleCurrentPage - 1) * $scope.rolePageSize.value);
+var end = begin + parseInt($scope.rolePageSize.value);
+
+if (parseInt(end) > $scope.originalFilteredRoles.length) {
+    // set the last item index to length of array
+    end = $scope.originalFilteredRoles.length;
+}
+
+$scope.roles = $scope.originalFilteredRoles.slice(begin, end);
+};
 }
