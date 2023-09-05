@@ -237,17 +237,17 @@
             <div class="tablenav">
               <span class="displaying-num">
                   Records per page
-                  <select name="recordsPerPage" ng-model="pageSize" ng-options="page.value for page in pageSizeOptions" ng-change="pageSizeChanged()">
+                  <select name="recordsPerPage" ng-model="channelPageSize" ng-options="page.value for page in channelPageSizeOptions" ng-change="channelPageSizeChanged()">
                   </select>
               </span>
               <div class="tablenav-pages">
                   <span class="pagination-links">
-                      <span>{{engagementItems.length}} items </span>
-                      <a class="first-page" ng-click="pageNoChanged(-2)"><span>«</span></a>
-                      <a class="prev-page" ng-click="pageNoChanged(-1)"><span>‹</span></a>
-                      <span>{{currentPage}} of {{lastPage}}</span>
-                      <a class="next-page" ng-click="pageNoChanged(1)"><span>›</span></a>
-                      <a class="last-page" ng-click="pageNoChanged(2)"><span>»</span></a>
+                      <span>{{filteredChannels.length}} items </span>
+                      <a class="first-page" ng-click="channelPageNoChanged(-2)"><span>«</span></a>
+                      <a class="prev-page" ng-click="channelPageNoChanged(-1)"><span>‹</span></a>
+                      <span>{{channelCurrentPage}} of {{channelLastPage}}</span>
+                      <a class="next-page" ng-click="channelPageNoChanged(1)"><span>›</span></a>
+                      <a class="last-page" ng-click="channelPageNoChanged(2)"><span>»</span></a>
                   </span>
               </div>
           </div>

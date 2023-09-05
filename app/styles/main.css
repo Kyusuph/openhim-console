@@ -1564,3 +1564,26 @@ label { position: relative; }
   background-color: transparent;
   outline: none;
 }
+
+.tablenav {
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: grey;
+}
+
+.pagination-links a {
+  color: blue; 
+  background-color: #edf5fc; 
+  text-decoration: none; 
+  padding: 5px 10px; 
+  margin: 0 0px; 
+}
+
+
+.pagination-links a:hover {
+  background-color: #bbb; 
+  cursor: pointer;
+}

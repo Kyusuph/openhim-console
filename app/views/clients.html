@@ -51,7 +51,7 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="role in roles | orderBy:['name'] | filter:roleSearchString">
-                    <td data-title="#{{ $index +1 }}"><span id="counter">{{ $index +1 }}</span></td>
+                    <td data-title="#{{ $index +1 }}"><span id="counter">{{roleStartIndex + $index +1 }}</span></td>
                     <td class="inTableEditTextBoxTd" data-title="Role">
                       <span ng-show="!editRoleNames || nameSaved[role.name]">{{ role.displayName }}</span>
                       <form ng-show="editRoleNames && !nameSaved[role.name]">
@@ -120,6 +120,24 @@
                   </tr>
                 </tbody>
               </table>
+
+            <div class="tablenav">
+              <span class="displaying-num">
+                  Records per page
+                  <select name="recordsPerPage" ng-model="rolePageSize" ng-options="page.value for page in rolePageSizeOptions" ng-change="rolePageSizeChanged()">
+                  </select>
+              </span>
+              <div class="tablenav-pages">
+                  <span class="pagination-links">
+                      <span>{{roles.length}} items </span>
+                      <a class="first-page" ng-click="rolePageNoChanged(-2)"><span>«</span></a>
+                      <a class="prev-page" ng-click="rolePageNoChanged(-1)"><span>‹</span></a>
+                      <span>{{roleCurrentPage}} of {{roleLastPage}}</span>
+                      <a class="next-page" ng-click="rolePageNoChanged(1)"><span>›</span></a>
+                      <a class="last-page" ng-click="rolePageNoChanged(2)"><span>»</span></a>
+                  </span>
+              </div>
+          </div>
             </div>
             <button class="btn btn-primary" ng-click="addRole()" ng-show="!alerts.server"><i
                 class="glyphicon glyphicon-plus"></i> Role</button>
@@ -167,7 +185,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="client in clients | orderBy:['name'] | filter:clientSearchString">
-                  <td data-title="#{{ $index +1 }}"><span id="counter">{{ $index +1 }}</span></td>
+                  <td data-title="#{{ clientStartIndex + $index +1 }}"><span id="counter">{{ $index +1 }}</span></td>
                   <td data-title="ID"><a href="" ng-click="editClient(client)">{{ client.clientID }}</a></td>
                   <td data-title="Name"><a href="" ng-click="editClient(client)">{{ client.name }}</a></td>
                   <td data-title="Organization">{{ client.organization }}</td>
@@ -189,6 +207,23 @@
                 </tr>
               </tbody>
             </table>
+            <div class="tablenav">
+              <span class="displaying-num">
+                  Records per page
+                  <select name="recordsPerPage" ng-model="clientPageSize" ng-options="page.value for page in clientPageSizeOptions" ng-change="clientPageSizeChanged()">
+                  </select>
+              </span>
+              <div class="tablenav-pages">
+                  <span class="pagination-links">
+                      <span>{{clients.length}} items </span>
+                      <a class="first-page" ng-click="clientPageNoChanged(-2)"><span>«</span></a>
+                      <a class="prev-page" ng-click="clientPageNoChanged(-1)"><span>‹</span></a>
+                      <span>{{clientCurrentPage}} of {{clientLastPage}}</span>
+                      <a class="next-page" ng-click="clientPageNoChanged(1)"><span>›</span></a>
+                      <a class="last-page" ng-click="clientPageNoChanged(2)"><span>»</span></a>
+                  </span>
+              </div>
+          </div>
           </div>
 
 
