@@ -47,6 +47,7 @@ export function ChannelsCtrl($scope, $uibModal, Api, Alerting) {
     } else {
       $scope.filteredChannels = $scope.channels;
     }
+    $scope.originalFilteredChannels = [];
   };
 
   const queryError = function (err) {
