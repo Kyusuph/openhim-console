@@ -208,6 +208,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
     } else {
       $scope.channelStatusFilteredGraphData = $scope.channelStatusGraphData
     }
+    $scope.originalFilteredDashboardChannels = [];
   }
 
   $scope.updateMetrics()
@@ -233,7 +234,7 @@ export function DashboardCtrl ($scope, $uibModal, $location, $interval, Api, Ale
 
   $scope.dashboardChannelPageSize = $scope.dashboardChannelPageSizeOptions[0]; // default page size as per AC
 
-  $scope.$watch('dashboardChannels', function (newValue, oldValue) {
+  $scope.$watch('channelStatusFilteredGraphData', function (newValue, oldValue) {
       if (newValue !== oldValue) {
 
           if ($scope.channelStatusFilteredGraphData.length > 0 && $scope.originalFilteredDashboardChannels.length === 0) {
